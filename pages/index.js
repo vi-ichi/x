@@ -1,10 +1,20 @@
 import { useEffect, useState } from "react";
 import keyboardjs from "keyboardjs";
 import { useDebouncedCallback } from "use-debounce";
+import useInterval from "use-interval";
+
+function Move({ setOffset }) {
+  useInterval(() => {
+    setOffset((x) => x - 4);
+  }, 16);
+
+  return null;
+}
 
 export default function Home() {
   const [level, setLevel] = useState(false);
   const [jump, setJump] = useState(false);
+  const [offset, setOffset] = useState(1000);
 
   const debounce = useDebouncedCallback(() => {
     setJump(false);
@@ -38,6 +48,7 @@ export default function Home() {
         ))}
       {level && (
         <div className="relative">
+          <Move setOffset={setOffset} />
           <div
             className={`absolute bg-gray-500 ${
               jump ? "mt-[200px]" : "mt-[400px]"
@@ -45,7 +56,12 @@ export default function Home() {
           >
             &nbsp;
           </div>
-          <div className="absolute bg-gray-500 rounded-full w-[100px] h-[100px] mt-[200px]">&nbsp;</div>
+          <div
+            style={{ left: `${offset}px` }}
+            className="absolute bg-gray-500 rounded-full w-[100px] h-[100px] mt-[200px]"
+          >
+            &nbsp;
+          </div>
         </div>
       )}
     </div>
