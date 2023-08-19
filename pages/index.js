@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import keyboardjs from "keyboardjs";
-import debounce from "lodash/debounce";
+import { useDebouncedCallback } from "use-debounce";
 
 export default function Home() {
   const [level, setLevel] = useState(false);
   const [jump, setJump] = useState(false);
 
-  const debouncedJump = debounce(() => setJump(false), 1000);
+  const debounce = useDebouncedCallback(() => {
+    setJump(false);
+  }, 100);
 
   function openLevel() {
     setLevel(true);
@@ -19,9 +21,9 @@ export default function Home() {
       }
 
       setJump(true);
-      debouncedJump();
+      debounce();
     });
-  }, []);
+  }, [level, debounce]);
 
   return (
     <div className="grid grid-cols-3 gap-4 mx-auto max-w-5xl mt-8">
