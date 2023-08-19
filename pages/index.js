@@ -26,7 +26,7 @@ export default function Home() {
   }, [level, debounce]);
 
   return (
-    <div className="grid grid-cols-3 gap-4 mx-auto max-w-5xl mt-8">
+    <div className="grid grid-cols-3 gap-4 mx-auto max-w-5xl pt-8">
       {!level &&
         [...Array(9)].map(() => (
           <div
@@ -37,14 +37,15 @@ export default function Home() {
           </div>
         ))}
       {level && (
-        <div>
+        <div className="relative">
           <div
-            className={`bg-gray-500 ${
+            className={`absolute bg-gray-500 ${
               jump ? "mt-[200px]" : "mt-[400px]"
             } w-32 h-[200px]`}
           >
             &nbsp;
           </div>
+          <div className="absolute bg-gray-500 rounded-full w-[100px] h-[100px] mt-[200px]">&nbsp;</div>
         </div>
       )}
     </div>
