@@ -3,6 +3,7 @@ import keyboardjs from "keyboardjs";
 import { useDebouncedCallback } from "use-debounce";
 import useInterval from "use-interval";
 import data from "@/data";
+import { Canvas } from "@bucky24/react-canvas/build/main";
 
 function Move({ setOffset }) {
   useInterval(() => {
@@ -46,9 +47,10 @@ export default function Home() {
           <div
             key={i}
             onClick={() => openLevel(x.title)}
-            className="bg-gray-500 rounded-lg px-4 pt-2 pb-32 text-2xl hover:bg-gray-400 transition"
+            className="relative bg-gray-500 rounded-lg hover:bg-gray-400 transition"
           >
-            {x.title}
+            <div className="px-4 pt-2 pb-32 text-2xl">{x.title}</div>
+            <Canvas className="absolute"></Canvas>
           </div>
         ))}
       {level && (
