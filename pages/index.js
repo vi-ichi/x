@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import keyboardjs from "keyboardjs";
 import { useDebouncedCallback } from "use-debounce";
 import useInterval from "use-interval";
+import data from "@/data";
 
 function Move({ setOffset }) {
   useInterval(() => {
@@ -13,15 +14,18 @@ function Move({ setOffset }) {
 
 export default function Home() {
   const [level, setLevel] = useState(false);
+  const [title, setTitle] = useState("");
   const [jump, setJump] = useState(false);
   const [offset, setOffset] = useState(1000);
+  const [changeableData, setChangeableData] = useState(data);
 
   const debounce = useDebouncedCallback(() => {
     setJump(false);
   }, 100);
 
-  function openLevel() {
+  function openLevel(title) {
     setLevel(true);
+    setTitle(title);
   }
 
   useEffect(() => {
@@ -38,12 +42,12 @@ export default function Home() {
   return (
     <div className="grid grid-cols-3 gap-4 mx-auto max-w-5xl pt-8">
       {!level &&
-        [...Array(9)].map(() => (
+        changeableData.map((x) => (
           <div
-            onClick={openLevel}
+            onClick={() => openLevel(x.title)}
             className="bg-gray-500 rounded-lg px-4 pt-2 pb-32 text-2xl hover:bg-gray-400 transition"
           >
-            Level Name
+            {x.title}
           </div>
         ))}
       {level && (
@@ -56,12 +60,18 @@ export default function Home() {
           >
             &nbsp;
           </div>
-          <div
-            style={{ left: `${offset}px` }}
-            className="absolute bg-gray-500 rounded-full w-[100px] h-[100px] mt-[200px]"
-          >
-            &nbsp;
-          </div>
+          {changeableData
+            .find((x) => x.title === title)
+            .points.map((x) => (
+              <div
+                style={{ left: `${x[0] + offset}px` }}
+                className={`absolute bg-gray-500 rounded-full w-[100px] h-[100px] ${
+                  x[1] === 1 ? "mt-[200px]" : "mt-[400px]"
+                }`}
+              >
+                &nbsp;
+              </div>
+            ))}
         </div>
       )}
     </div>
