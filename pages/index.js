@@ -42,8 +42,9 @@ export default function Home() {
   return (
     <div className="grid grid-cols-3 gap-4 mx-auto max-w-5xl pt-8">
       {!level &&
-        changeableData.map((x) => (
+        changeableData.map((x, i) => (
           <div
+            key={i}
             onClick={() => openLevel(x.title)}
             className="bg-gray-500 rounded-lg px-4 pt-2 pb-32 text-2xl hover:bg-gray-400 transition"
           >
@@ -62,8 +63,9 @@ export default function Home() {
           </div>
           {changeableData
             .find((x) => x.title === title)
-            .points.map((x) => (
+            .points.map((x, i) => (
               <div
+                key={i}
                 style={{ left: `${x[0] + offset}px` }}
                 className={`absolute bg-gray-500 rounded-full w-[100px] h-[100px] ${
                   x[1] === 1 ? "mt-[200px]" : "mt-[400px]"
