@@ -1,84 +1,56 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import keyboardjs from "keyboardjs";
 import { useDebouncedCallback } from "use-debounce";
-import useInterval from "use-interval";
 import data from "@/data";
-import Canvas from "@/components/Canvas";
-
-function Move({ setOffset }) {
-  useInterval(() => {
-    setOffset((x) => x - 4);
-  }, 16);
-
-  return null;
-}
 
 export default function Home() {
-  const [level, setLevel] = useState(false);
-  const [title, setTitle] = useState("");
+  const [level, setLevel] = useState(data[0]);
+  const [title, setTitle] = useState("Instant Crush");
   const [jump, setJump] = useState(false);
-  const [offset, setOffset] = useState(1000);
-  const [changeableData, setChangeableData] = useState(data);
-
-  const debounce = useDebouncedCallback(() => {
-    setJump(false);
-  }, 100);
-
-  function openLevel(title) {
-    setLevel(true);
-    setTitle(title);
-  }
+  const [height, setHeight] = useState(0);
+  const [width, setWidth] = useState(0);
+  const ref = useRef();
 
   useEffect(() => {
-    keyboardjs.bind("space", () => {
-      if (!level) {
-        return;
-      }
+    setHeight(innerHeight);
+    setWidth(innerWidth);
+  }, []);
 
-      setJump(true);
-      debounce();
-    });
-  }, [level, debounce]);
+  // const debounce = useDebouncedCallback(() => {
+  //   setJump(false);
+  // }, 100);
+
+  // useEffect(() => {
+  //   keyboardjs.bind("space", () => {
+  //     if (!level) {
+  //       return;
+  //     }
+
+  //     setJump(true);
+  //     debounce();
+  //   });
+  // }, [level, debounce]);
+
+  useEffect(() => {
+    if (!ref.current) {
+      return;
+    }
+
+    const c = ref.current.getContext("2d");
+    c.fillStyle = "black";
+    c.fillRect(0, 0, width, height);
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+  }, [width, height]);
 
   return (
-    <div className="grid gap-4 mx-auto max-w-5xl py-8">
-      {!level &&
-        changeableData.map((x, i) => (
-          <div
-            key={i}
-            onClick={() => openLevel(x.title)}
-            className="relative bg-gray-500 rounded-lg hover:bg-gray-400 transition"
-          >
-            <div className="px-4 pt-2 text-2xl">{x.title}</div>
-            <div className="px-4 pb-2">{x.author}</div>
-            <Canvas />
-          </div>
-        ))}
-      {level && (
-        <div className="relative">
-          <Move setOffset={setOffset} />
-          <div
-            className={`absolute bg-gray-500 ${
-              jump ? "mt-[200px]" : "mt-[400px]"
-            } w-32 h-[200px]`}
-          >
-            <Canvas />
-          </div>
-          {changeableData
-            .find((x) => x.title === title)
-            .points.map((x, i) => (
-              <div
-                key={i}
-                style={{ left: `${x[0] + offset}px` }}
-                className={`absolute bg-gray-500 rounded-full w-[100px] h-[100px] ${
-                  x[1] === 1 ? "mt-[200px]" : "mt-[400px]"
-                }`}
-              >
-                &nbsp;
-              </div>
-            ))}
-        </div>
-      )}
-    </div>
+    <>
+      <div className="absolute text-center w-full mt-8">
+        <div className="text-2xl">{level.title}</div>
+        <div>{level.author}</div>
+      </div>
+      <div className="absolute text-center w-full bottom-0 mb-8">press SPACE to play</div>
+      <canvas height={height} width={width} ref={ref}></canvas>
+    </>
   );
 }
