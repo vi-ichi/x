@@ -41,7 +41,7 @@ export default function Home() {
   }, [level, debounce]);
 
   return (
-    <div className="grid grid-cols-3 gap-4 mx-auto max-w-5xl pt-8">
+    <div className="grid gap-4 mx-auto max-w-5xl py-8">
       {!level &&
         changeableData.map((x, i) => (
           <div
@@ -49,7 +49,8 @@ export default function Home() {
             onClick={() => openLevel(x.title)}
             className="relative bg-gray-500 rounded-lg hover:bg-gray-400 transition"
           >
-            <div className="px-4 pt-2 pb-2 text-2xl">{x.title}</div>
+            <div className="px-4 pt-2 text-2xl">{x.title}</div>
+            <div className="px-4 pb-2">{x.author}</div>
             <Canvas />
           </div>
         ))}

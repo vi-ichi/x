@@ -1,6 +1,7 @@
 const data = [
   {
-    title: "Первый уровень",
+    title: "Instant Crush",
+    author: "Daft Punk",
     points: [
       [10, 0],
       [150, 0],
@@ -8,7 +9,8 @@ const data = [
     ],
   },
   {
-    title: "Второй уровень",
+    title: "Veridis Quo",
+    author: "Daft Punk",
     points: [
       [10, 0],
       [150, 0],
@@ -17,6 +19,7 @@ const data = [
   },
   {
     title: "Третий уровень",
+    author: "a",
     points: [
       [10, 0],
       [150, 0],
@@ -25,6 +28,7 @@ const data = [
   },
   {
     title: "Четвертый уровень",
+    author: "a",
     points: [
       [10, 0],
       [150, 0],
