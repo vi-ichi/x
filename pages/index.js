@@ -2,14 +2,23 @@ import { useEffect, useState, useRef } from "react";
 import keyboardjs from "keyboardjs";
 import { useDebouncedCallback } from "use-debounce";
 import data from "@/data";
+import YouTube from "react-youtube";
+import Image from "next/image";
+import useSWR from "swr";
 
 export default function Home() {
   const [i, setI] = useState(0);
+  const [_data] = useState(data);
   // const [jump, setJump] = useState(false);
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
   const [isPlay, setIsPlay] = useState(false);
   const ref = useRef();
+
+  const { data: image } = useSWR(
+    ["https://noembed.com/embed?url=https://www.youtube.com/watch?v=", i],
+    (url, i) => fetch(url + _data[i].youtube).then((res) => res.json())
+  );
 
   function next() {
     if (i + 1 > data.length - 1) {
@@ -40,6 +49,14 @@ export default function Home() {
   function blue() {}
 
   function red() {}
+
+  function onReady() {}
+
+  function onPause() {}
+
+  function onPlay() {}
+
+  function onError() {}
 
   useEffect(() => {
     setHeight(innerHeight);
@@ -76,13 +93,32 @@ export default function Home() {
   return (
     <>
       <div className="absolute bottom-0 flex flex-col justify-center w-full gap-8">
+        <div className="mx-auto">
+          {isPlay && (
+            <YouTube
+              className=""
+              iframeClassName="rounded-2xl"
+              videoId={data[i].youtube}
+              onReady={onReady}
+              onPause={onPause}
+              onPlay={onPlay}
+              onError={onError}
+              opts={{
+                playerVars: {
+                  disablekb: 1,
+                  controls: 0,
+                },
+              }}
+            />
+          )}
+          {image && <Image src={image.thumbnail_url} alt="" fill />}
+        </div>
         <div className="text-center w-full mt-8">
           <div className="text-2xl">{data[i].title}</div>
           <div className="text-gray-400">{data[i].author}</div>
         </div>
         <div className="px-8 relative max-w-sm mx-auto w-full">
-          <div className="absolute p-3 -mt-2 -ml-2 rounded-full bg-white">
-          </div>
+          <div className="absolute p-3 -mt-2 -ml-2 rounded-full bg-white"></div>
           <div className="bg-gray-500 h-2 rounded-full w-full"></div>
         </div>
         <div className="flex justify-center mb-16 gap-8">

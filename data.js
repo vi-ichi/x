@@ -1,12 +1,13 @@
 const data = [
   {
-    title: "Instant Crush",
-    author: "Daft Punk",
+    title: "Bad Apple",
+    author: "a",
     points: [
       [10, 0],
       [150, 0],
       [300, 1],
     ],
+    youtube: "FtutLA63Cp8",
   },
   {
     title: "Veridis Quo",
@@ -16,6 +17,7 @@ const data = [
       [150, 0],
       [300, 1],
     ],
+    youtube: "ySLc8gZ3oEc",
   },
   {
     title: "Третий уровень",
@@ -25,6 +27,7 @@ const data = [
       [150, 0],
       [300, 1],
     ],
+    youtube: "ySLc8gZ3oEc",
   },
   {
     title: "Четвертый уровень",
@@ -34,6 +37,7 @@ const data = [
       [150, 0],
       [300, 1],
     ],
+    youtube: "ySLc8gZ3oEc",
   },
 ];
 
