@@ -1,10 +1,12 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import keyboardjs from "keyboardjs";
 import { useDebouncedCallback } from "use-debounce";
 import data from "@/data";
 import YouTube from "react-youtube";
 import Image from "next/image";
 import useSWR from "swr";
+import Head from "next/head";
+import { useTimeout } from "react-use-timeout";
 
 export default function Home() {
   const [i, setI] = useState(0);
@@ -13,7 +15,9 @@ export default function Home() {
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
   const [isPlay, setIsPlay] = useState(false);
+  const [seek, setSeek] = useState(0);
   const ref = useRef();
+  const yt = useRef();
 
   const { data: image } = useSWR(
     ["https://noembed.com/embed?url=https://www.youtube.com/watch?v=", i],
@@ -50,7 +54,10 @@ export default function Home() {
 
   function red() {}
 
-  function onReady() {}
+  function onReady({ target }) {
+    target.playVideo();
+    yt.current = target;
+  }
 
   function onPause() {}
 
@@ -62,6 +69,13 @@ export default function Home() {
     setHeight(innerHeight);
     setWidth(innerWidth);
   }, []);
+
+  useTimeout(
+    useCallback(() => {
+      setSeek(yt.current?.getCurrentTime());
+    }),
+    1000
+  ).start();
 
   // const debounce = useDebouncedCallback(() => {
   //   setJump(false);
@@ -92,11 +106,14 @@ export default function Home() {
 
   return (
     <>
+      <Head>
+        <title>x</title>
+      </Head>
       <div className="absolute bottom-0 flex flex-col justify-center w-full gap-8">
         <div className="mx-auto">
           {isPlay && (
             <YouTube
-              className=""
+              className="aspect-video"
               iframeClassName="rounded-2xl"
               videoId={data[i].youtube}
               onReady={onReady}
@@ -114,7 +131,9 @@ export default function Home() {
           {image && <Image src={image.thumbnail_url} alt="" fill />}
         </div>
         <div className="text-center w-full mt-8">
-          <div className="text-2xl">{data[i].title}</div>
+          <div className="text-2xl">
+            {data[i].title} {seek}
+          </div>
           <div className="text-gray-400">{data[i].author}</div>
         </div>
         <div className="px-8 relative max-w-sm mx-auto w-full">
@@ -142,7 +161,7 @@ export default function Home() {
           )}
           {isPlay && (
             <>
-              <button className="rounded-full bg-red-500 p-4" onClick={red}>
+              <button className="rounded-full bg-sky-400 p-4" onClick={blue}>
                 <div className="w-6 h-6"></div>
               </button>
               <button className="rounded-full p-4" onClick={pause}>
@@ -161,7 +180,7 @@ export default function Home() {
                   />
                 </svg>
               </button>
-              <button className="rounded-full bg-blue-500 p-4" onClick={blue}>
+              <button className="rounded-full bg-pink-400 p-4" onClick={red}>
                 <div className="w-6 h-6"></div>
               </button>
             </>
