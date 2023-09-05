@@ -1,10 +1,9 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
 import keyboardjs from "keyboardjs";
 import { useDebouncedCallback } from "use-debounce";
 import data from "@/data";
 import YouTube from "react-youtube";
 import Image from "next/image";
-import useSWR from "swr";
 import Head from "next/head";
 import useInterval from "use-interval";
 
@@ -18,7 +17,6 @@ function Interval({ yt, setSeek }) {
 
 export default function Home() {
   const [i, setI] = useState(0);
-  const [_data] = useState(data);
   // const [jump, setJump] = useState(false);
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
@@ -26,11 +24,6 @@ export default function Home() {
   const [seek, setSeek] = useState(0);
   const ref = useRef();
   const yt = useRef();
-
-  const { data: image } = useSWR(
-    ["https://noembed.com/embed?url=https://www.youtube.com/watch?v=", i],
-    (url, i) => fetch(url + _data[i].youtube).then((res) => res.json())
-  );
 
   function next() {
     if (i + 1 > data.length - 1) {
@@ -115,9 +108,7 @@ export default function Home() {
         <div className="mx-auto">
           {isPlay && (
             <YouTube
-              className="aspect-video"
-              iframeClassName="rounded-2xl"
-              videoId={data[i].youtube}
+              videoId={data[i].yt}
               onReady={onReady}
               onPause={onPause}
               onPlay={onPlay}
@@ -127,15 +118,23 @@ export default function Home() {
                   disablekb: 1,
                   controls: 0,
                 },
+                width: "300",
+                height: "176",
               }}
             />
           )}
-          {image && <Image src={image.thumbnail_url} alt="" fill />}
+          {!isPlay && (
+            <Image
+              src={`https://i.ytimg.com/vi/${data[i].yt}/hqdefault.jpg`}
+              alt=""
+              width={300}
+              height={176}
+              className="-mb-6"
+            />
+          )}
         </div>
         <div className="text-center w-full mt-8">
-          <div className="text-2xl">
-            {data[i].title} {seek}
-          </div>
+          <div className="text-2xl">{data[i].title}</div>
           <div className="text-gray-400">{data[i].author}</div>
         </div>
         <div className="px-8 relative max-w-sm mx-auto w-full">

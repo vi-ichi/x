@@ -1,33 +1,33 @@
 const data = [
   {
     title: "Bad Apple",
-    author: "a",
+    author: "Masayoshi Minoshima",
     points: [
       [10, 0],
       [150, 0],
       [300, 1],
     ],
-    youtube: "FtutLA63Cp8",
+    yt: "FtutLA63Cp8",
   },
   {
-    title: "Veridis Quo",
-    author: "Daft Punk",
+    title: "Stayin' Alive",
+    author: "Bee Gees",
     points: [
       [10, 0],
       [150, 0],
       [300, 1],
     ],
-    youtube: "ySLc8gZ3oEc",
+    yt: "qZzHDXMTvAo",
   },
   {
-    title: "Третий уровень",
-    author: "a",
+    title: "Daft Punk",
+    author: "Veridis Quo",
     points: [
       [10, 0],
       [150, 0],
       [300, 1],
     ],
-    youtube: "ySLc8gZ3oEc",
+    yt: "ySLc8gZ3oEc",
   },
   {
     title: "Четвертый уровень",
@@ -37,7 +37,7 @@ const data = [
       [150, 0],
       [300, 1],
     ],
-    youtube: "ySLc8gZ3oEc",
+    yt: "ySLc8gZ3oEc",
   },
 ];
 
