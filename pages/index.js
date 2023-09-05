@@ -6,7 +6,15 @@ import YouTube from "react-youtube";
 import Image from "next/image";
 import useSWR from "swr";
 import Head from "next/head";
-import { useTimeout } from "react-use-timeout";
+import useInterval from "use-interval";
+
+function Interval({ yt, setSeek }) {
+  useInterval(() => {
+    setSeek(yt.current?.getCurrentTime());
+  }, 1000);
+
+  return null;
+}
 
 export default function Home() {
   const [i, setI] = useState(0);
@@ -70,13 +78,6 @@ export default function Home() {
     setWidth(innerWidth);
   }, []);
 
-  useTimeout(
-    useCallback(() => {
-      setSeek(yt.current?.getCurrentTime());
-    }),
-    1000
-  ).start();
-
   // const debounce = useDebouncedCallback(() => {
   //   setJump(false);
   // }, 100);
@@ -109,6 +110,7 @@ export default function Home() {
       <Head>
         <title>x</title>
       </Head>
+      {isPlay && <Interval yt={yt} setSeek={setSeek} />}
       <div className="absolute bottom-0 flex flex-col justify-center w-full gap-8">
         <div className="mx-auto">
           {isPlay && (
