@@ -100,7 +100,12 @@ export default function Home() {
     c.fillStyle = "black";
     c.fillRect(0, 0, width, height);
 
-    // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+    const img = new window.Image();
+    img.onload = () => {
+      // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+      c.drawImage(img, width / 2 - 50, height / 2 - 50, 100, 100);
+    };
+    img.src = "/shark.png";
   }, [width, height]);
 
   return (
