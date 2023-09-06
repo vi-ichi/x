@@ -22,6 +22,7 @@ export default function Home() {
   const [width, setWidth] = useState(0);
   const [isPlay, setIsPlay] = useState(false);
   const [seek, setSeek] = useState(0);
+  const [afterLoad, setAfterLoad] = useState(true);
   const ref = useRef();
   const yt = useRef();
 
@@ -66,6 +67,10 @@ export default function Home() {
 
   function onError() {}
 
+  function onPlayButtonClick() {
+    setAfterLoad(false);
+  }
+
   useEffect(() => {
     setHeight(innerHeight);
     setWidth(innerWidth);
@@ -103,127 +108,163 @@ export default function Home() {
       <Head>
         <title>x</title>
       </Head>
-      {isPlay && <Interval yt={yt} setSeek={setSeek} />}
-      <div className="absolute bottom-0 flex flex-col justify-center w-full gap-8">
-        <div className="mx-auto">
-          {isPlay && (
-            <YouTube
-              videoId={data[i].yt}
-              onReady={onReady}
-              onPause={onPause}
-              onPlay={onPlay}
-              onError={onError}
-              opts={{
-                playerVars: {
-                  disablekb: 1,
-                  controls: 0,
-                },
-                width: "0",
-                height: "0",
-              }}
-            />
-          )}
-          {!isPlay && (
-            <Image
-              src={`https://i.ytimg.com/vi/${data[i].yt}/hqdefault.jpg`}
-              alt=""
-              width={300}
-              height={176}
-              className="-mb-6"
-            />
-          )}
+      {afterLoad ? (
+        <div className="flex justify-center">
+          <Image className="absolute bottom-0 mb-[350px]" src="/heart.png" width={100} height={100} alt="" />
+          <button
+            className="absolute bottom-0 bg-gray-300 p-4 rounded-full mb-16"
+            onClick={onPlayButtonClick}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="black"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
+              />
+            </svg>
+          </button>
         </div>
-        <div className="text-center w-full mt-8">
-          <div className="text-2xl">{data[i].title}</div>
-          <div className="text-gray-400">{data[i].author}</div>
-        </div>
-        <div className="px-8 relative max-w-sm mx-auto w-full">
-          <div className="absolute p-3 -mt-2 -ml-2 rounded-full bg-white"></div>
-          <div className="bg-gray-500 h-2 rounded-full w-full"></div>
-        </div>
-        <div className="flex justify-center mb-16 gap-8">
-          {!isPlay && (
-            <button className="rounded-full p-4" onClick={prev}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="white"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M21 16.811c0 .864-.933 1.405-1.683.977l-7.108-4.062a1.125 1.125 0 010-1.953l7.108-4.062A1.125 1.125 0 0121 8.688v8.123zM11.25 16.811c0 .864-.933 1.405-1.683.977l-7.108-4.062a1.125 1.125 0 010-1.953L9.567 7.71a1.125 1.125 0 011.683.977v8.123z"
+      ) : (
+        <>
+          {isPlay && <Interval yt={yt} setSeek={setSeek} />}
+          <div className="absolute bottom-0 flex flex-col justify-center w-full gap-8">
+            <div className="mx-auto">
+              {isPlay && (
+                <YouTube
+                  videoId={data[i].yt}
+                  onReady={onReady}
+                  onPause={onPause}
+                  onPlay={onPlay}
+                  onError={onError}
+                  opts={{
+                    playerVars: {
+                      disablekb: 1,
+                      controls: 0,
+                    },
+                    width: "0",
+                    height: "0",
+                  }}
                 />
-              </svg>
-            </button>
-          )}
-          {isPlay && (
-            <>
-              <button className="rounded-full bg-sky-400 p-4" onClick={blue}>
-                <div className="w-6 h-6"></div>
-              </button>
-              <button className="rounded-full p-4" onClick={pause}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="white"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.75 5.25v13.5m-7.5-13.5v13.5"
-                  />
-                </svg>
-              </button>
-              <button className="rounded-full bg-pink-400 p-4" onClick={red}>
-                <div className="w-6 h-6"></div>
-              </button>
-            </>
-          )}
-          {!isPlay && (
-            <>
-              <button className="rounded-full bg-gray-300 p-4" onClick={play}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="black"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
-                  />
-                </svg>
-              </button>
-              <button className="rounded-full p-4" onClick={next}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="white"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062A1.125 1.125 0 013 16.81V8.688zM12.75 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062a1.125 1.125 0 01-1.683-.977V8.688z"
-                  />
-                </svg>
-              </button>
-            </>
-          )}
-        </div>
-      </div>
+              )}
+              {!isPlay && (
+                <Image
+                  src={`https://i.ytimg.com/vi/${data[i].yt}/hqdefault.jpg`}
+                  alt=""
+                  width={300}
+                  height={176}
+                  className="-mb-6"
+                />
+              )}
+            </div>
+            <div className="text-center w-full mt-8">
+              <div className="text-2xl">{data[i].title}</div>
+              <div className="text-gray-400">{data[i].author}</div>
+            </div>
+            <div className="px-8 relative max-w-sm mx-auto w-full">
+              <div className="absolute p-3 -mt-2 -ml-2 rounded-full bg-white"></div>
+              <div className="bg-gray-500 h-2 rounded-full w-full"></div>
+            </div>
+            <div className="flex justify-center mb-16 gap-8">
+              {!isPlay && (
+                <button className="rounded-full p-4" onClick={prev}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="white"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M21 16.811c0 .864-.933 1.405-1.683.977l-7.108-4.062a1.125 1.125 0 010-1.953l7.108-4.062A1.125 1.125 0 0121 8.688v8.123zM11.25 16.811c0 .864-.933 1.405-1.683.977l-7.108-4.062a1.125 1.125 0 010-1.953L9.567 7.71a1.125 1.125 0 011.683.977v8.123z"
+                    />
+                  </svg>
+                </button>
+              )}
+              {isPlay && (
+                <>
+                  <button
+                    className="rounded-full bg-sky-400 p-4"
+                    onClick={blue}
+                  >
+                    <div className="w-6 h-6"></div>
+                  </button>
+                  <button className="rounded-full p-4" onClick={pause}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="white"
+                      className="w-6 h-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15.75 5.25v13.5m-7.5-13.5v13.5"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    className="rounded-full bg-pink-400 p-4"
+                    onClick={red}
+                  >
+                    <div className="w-6 h-6"></div>
+                  </button>
+                </>
+              )}
+              {!isPlay && (
+                <>
+                  <button
+                    className="rounded-full bg-gray-300 p-4"
+                    onClick={play}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="black"
+                      className="w-6 h-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
+                      />
+                    </svg>
+                  </button>
+                  <button className="rounded-full p-4" onClick={next}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="white"
+                      className="w-6 h-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M3 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062A1.125 1.125 0 013 16.81V8.688zM12.75 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062a1.125 1.125 0 01-1.683-.977V8.688z"
+                      />
+                    </svg>
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </>
+      )}
       <canvas height={height} width={width} ref={ref}></canvas>
     </>
   );
