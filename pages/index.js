@@ -118,8 +118,8 @@ export default function Home() {
                   disablekb: 1,
                   controls: 0,
                 },
-                width: "300",
-                height: "176",
+                width: "0",
+                height: "0",
               }}
             />
           )}
