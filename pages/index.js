@@ -110,7 +110,13 @@ export default function Home() {
       </Head>
       {afterLoad ? (
         <div className="flex justify-center">
-          <Image className="absolute bottom-0 mb-[350px]" src="/heart.png" width={100} height={100} alt="" />
+          <Image
+            className="absolute bottom-0 mb-[350px]"
+            src="/heart.png"
+            width={100}
+            height={100}
+            alt=""
+          />
           <button
             className="absolute bottom-0 bg-gray-300 p-4 rounded-full mb-16"
             onClick={onPlayButtonClick}
@@ -136,32 +142,22 @@ export default function Home() {
           {isPlay && <Interval yt={yt} setSeek={setSeek} />}
           <div className="absolute bottom-0 flex flex-col justify-center w-full gap-8">
             <div className="mx-auto">
-              {isPlay && (
-                <YouTube
-                  videoId={data[i].yt}
-                  onReady={onReady}
-                  onPause={onPause}
-                  onPlay={onPlay}
-                  onError={onError}
-                  opts={{
-                    playerVars: {
-                      disablekb: 1,
-                      controls: 0,
-                    },
-                    width: "0",
-                    height: "0",
-                  }}
-                />
-              )}
-              {!isPlay && (
-                <Image
-                  src={`https://i.ytimg.com/vi/${data[i].yt}/hqdefault.jpg`}
-                  alt=""
-                  width={300}
-                  height={176}
-                  className="-mb-6"
-                />
-              )}
+              <YouTube
+                videoId={data[i].yt}
+                onReady={onReady}
+                onPause={onPause}
+                onPlay={onPlay}
+                onError={onError}
+                opts={{
+                  playerVars: {
+                    disablekb: 1,
+                    controls: 0,
+                    autoplay: 1,
+                  },
+                  width: "0",
+                  height: "0",
+                }}
+              />
             </div>
             <div className="text-center w-full mt-8">
               <div className="text-2xl">{data[i].title}</div>
