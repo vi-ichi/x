@@ -7,10 +7,12 @@ import Image from "next/image";
 import Head from "next/head";
 import useInterval from "use-interval";
 
-function Interval({ yt, setSeek }) {
+function ProgressInterval({ yt, setProgress }) {
   useInterval(() => {
-    setSeek(yt.current?.getCurrentTime());
-  }, 1000);
+    setProgress(
+      (100 * yt.current?.getCurrentTime()) / yt.current?.getDuration()
+    );
+  }, 100);
 
   return null;
 }
@@ -21,8 +23,8 @@ export default function Home() {
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
   const [isPlay, setIsPlay] = useState(false);
-  const [seek, setSeek] = useState(0);
   const [afterLoad, setAfterLoad] = useState(true);
+  const [progress, setProgress] = useState(0);
   const ref = useRef();
   const yt = useRef();
 
@@ -144,7 +146,7 @@ export default function Home() {
         </div>
       ) : (
         <>
-          {isPlay && <Interval yt={yt} setSeek={setSeek} />}
+          <ProgressInterval yt={yt} setProgress={setProgress} />
           <div className="absolute bottom-0 flex flex-col justify-center w-full gap-8">
             <div className="mx-auto">
               <YouTube
@@ -168,9 +170,12 @@ export default function Home() {
               <div className="text-2xl">{data[i].title}</div>
               <div className="text-gray-400">{data[i].author}</div>
             </div>
-            <div className="px-8 relative max-w-sm mx-auto w-full">
-              <div className="absolute p-3 -mt-2 -ml-2 rounded-full bg-white"></div>
-              <div className="bg-gray-500 h-2 rounded-full w-full"></div>
+            <div className="relative max-w-xs mx-auto w-full">
+              <div
+                className="absolute bg-gray-300 h-2 rounded-full z-10"
+                style={{ width: progress + "%" }}
+              ></div>
+              <div className="absolute bg-gray-500 h-2 rounded-full w-full"></div>
             </div>
             <div className="flex justify-center mb-16 gap-8">
               {!isPlay && (
