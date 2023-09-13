@@ -6,6 +6,9 @@ import YouTube from "react-youtube";
 import Image from "next/image";
 import Head from "next/head";
 import useInterval from "use-interval";
+import { register } from "swiper/element/bundle";
+import "swiper/element/css/pagination";
+import "swiper/element/css/navigation";
 
 function ProgressInterval({ yt, setProgress }) {
   useInterval(() => {
@@ -27,6 +30,7 @@ export default function Home() {
   const [progress, setProgress] = useState(0);
   const ref = useRef();
   const yt = useRef();
+  const swiper = useRef();
 
   function next() {
     if (i + 1 > data.length - 1) {
@@ -76,6 +80,8 @@ export default function Home() {
   useEffect(() => {
     setHeight(innerHeight);
     setWidth(innerWidth);
+
+    register();
   }, []);
 
   // const debounce = useDebouncedCallback(() => {
@@ -94,7 +100,7 @@ export default function Home() {
   // }, [level, debounce]);
 
   useEffect(() => {
-    if (!ref.current) {
+    if (!ref.current || !width || !height) {
       return;
     }
 
@@ -102,13 +108,28 @@ export default function Home() {
     c.fillStyle = "black";
     c.fillRect(0, 0, width, height);
 
+    if (afterLoad) {
+      return;
+    }
+
     const img = new window.Image();
     img.onload = () => {
       // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
       c.drawImage(img, width / 2 - 50, height / 2 - 50, 100, 100);
     };
     img.src = "/shark.png";
-  }, [width, height]);
+  }, [width, height, afterLoad]);
+
+  useEffect(() => {
+    swiper.current?.addEventListener("progress", (e) => {
+      const [s, progress] = e.detail;
+      console.log(progress);
+    });
+
+    swiper.current?.addEventListener("slidechange", (e) => {
+      console.log("slide changed");
+    });
+  }, []);
 
   return (
     <>
@@ -116,7 +137,10 @@ export default function Home() {
         <title>x</title>
       </Head>
       {afterLoad ? (
-        <div className="flex justify-center">
+        <div
+          className="flex justify-center w-full absolute inset-0"
+          onClick={onPlayButtonClick}
+        >
           <Image
             className="absolute bottom-0 mb-[350px]"
             src="/heart.png"
@@ -124,151 +148,137 @@ export default function Home() {
             height={100}
             alt=""
           />
-          <button
-            className="absolute bottom-0 bg-gray-300 p-4 rounded-full mb-16"
-            onClick={onPlayButtonClick}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="black"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
-              />
-            </svg>
-          </button>
+          <div className="absolute bottom-0 mb-16 text-2xl text-gray-300">
+            press anywhere to play
+          </div>
         </div>
       ) : (
         <>
           <ProgressInterval yt={yt} setProgress={setProgress} />
-          <div className="absolute bottom-0 flex flex-col justify-center w-full gap-8">
-            <div className="mx-auto">
-              <YouTube
-                videoId={data[i].yt}
-                onReady={onReady}
-                onPause={onPause}
-                onPlay={onPlay}
-                onError={onError}
-                opts={{
-                  playerVars: {
-                    disablekb: 1,
-                    controls: 0,
-                    autoplay: 1,
-                  },
-                  width: "0",
-                  height: "0",
-                }}
-              />
-            </div>
-            <div className="text-center w-full mt-8">
-              <div className="text-2xl">{data[i].title}</div>
-              <div className="text-gray-400">{data[i].author}</div>
-            </div>
-            <div className="relative max-w-xs mx-auto w-full">
-              <div
-                className="absolute bg-gray-300 h-2 rounded-full z-10"
-                style={{ width: progress + "%" }}
-              ></div>
-              <div className="absolute bg-gray-500 h-2 rounded-full w-full"></div>
-            </div>
-            <div className="flex justify-center mb-16 gap-8">
-              {!isPlay && (
-                <button className="rounded-full p-4" onClick={prev}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="white"
-                    className="w-6 h-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M21 16.811c0 .864-.933 1.405-1.683.977l-7.108-4.062a1.125 1.125 0 010-1.953l7.108-4.062A1.125 1.125 0 0121 8.688v8.123zM11.25 16.811c0 .864-.933 1.405-1.683.977l-7.108-4.062a1.125 1.125 0 010-1.953L9.567 7.71a1.125 1.125 0 011.683.977v8.123z"
-                    />
-                  </svg>
-                </button>
-              )}
-              {isPlay && (
-                <>
-                  <button
-                    className="rounded-full bg-sky-400 p-4"
-                    onClick={blue}
-                  >
-                    <div className="w-6 h-6"></div>
-                  </button>
-                  <button className="rounded-full p-4" onClick={pause}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="white"
-                      className="w-6 h-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15.75 5.25v13.5m-7.5-13.5v13.5"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    className="rounded-full bg-pink-400 p-4"
-                    onClick={red}
-                  >
-                    <div className="w-6 h-6"></div>
-                  </button>
-                </>
-              )}
-              {!isPlay && (
-                <>
-                  <button
-                    className="rounded-full bg-gray-300 p-4"
-                    onClick={play}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="black"
-                      className="w-6 h-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
-                      />
-                    </svg>
-                  </button>
-                  <button className="rounded-full p-4" onClick={next}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="white"
-                      className="w-6 h-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062A1.125 1.125 0 013 16.81V8.688zM12.75 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062a1.125 1.125 0 01-1.683-.977V8.688z"
-                      />
-                    </svg>
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
+          <YouTube
+            videoId={data[i].yt}
+            onReady={onReady}
+            onPause={onPause}
+            onPlay={onPlay}
+            onError={onError}
+            opts={{
+              playerVars: {
+                disablekb: 1,
+                controls: 0,
+                autoplay: 1,
+              },
+              width: "0",
+              height: "0",
+            }}
+          />
+          <swiper-container ref={swiper} navigation="true" pagination="true">
+            <swiper-slide>
+              <div className="absolute bottom-0 flex flex-col justify-center w-full gap-8">
+                <div className="text-center w-full mt-8">
+                  <div className="text-2xl">{data[i].title}</div>
+                  <div className="text-gray-400">{data[i].author}</div>
+                </div>
+                <div className="relative max-w-xs mx-auto w-full">
+                  <div
+                    className="absolute bg-gray-300 h-2 rounded-full z-10"
+                    style={{ width: progress + "%" }}
+                  ></div>
+                  <div className="absolute bg-gray-500 h-2 rounded-full w-full"></div>
+                </div>
+                <div className="flex justify-center mb-16 gap-8">
+                  {!isPlay && (
+                    <button className="rounded-full p-4" onClick={prev}>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="white"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M21 16.811c0 .864-.933 1.405-1.683.977l-7.108-4.062a1.125 1.125 0 010-1.953l7.108-4.062A1.125 1.125 0 0121 8.688v8.123zM11.25 16.811c0 .864-.933 1.405-1.683.977l-7.108-4.062a1.125 1.125 0 010-1.953L9.567 7.71a1.125 1.125 0 011.683.977v8.123z"
+                        />
+                      </svg>
+                    </button>
+                  )}
+                  {isPlay && (
+                    <>
+                      <button
+                        className="rounded-full bg-sky-400 p-4"
+                        onClick={blue}
+                      >
+                        <div className="w-6 h-6"></div>
+                      </button>
+                      <button className="rounded-full p-4" onClick={pause}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="white"
+                          className="w-6 h-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M15.75 5.25v13.5m-7.5-13.5v13.5"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className="rounded-full bg-pink-400 p-4"
+                        onClick={red}
+                      >
+                        <div className="w-6 h-6"></div>
+                      </button>
+                    </>
+                  )}
+                  {!isPlay && (
+                    <>
+                      <button
+                        className="rounded-full bg-gray-300 p-4"
+                        onClick={play}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="black"
+                          className="w-6 h-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
+                          />
+                        </svg>
+                      </button>
+                      <button className="rounded-full p-4" onClick={next}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="white"
+                          className="w-6 h-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M3 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062A1.125 1.125 0 013 16.81V8.688zM12.75 8.688c0-.864.933-1.405 1.683-.977l7.108 4.062a1.125 1.125 0 010 1.953l-7.108 4.062a1.125 1.125 0 01-1.683-.977V8.688z"
+                          />
+                        </svg>
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            </swiper-slide>
+          </swiper-container>
         </>
       )}
       <canvas height={height} width={width} ref={ref}></canvas>
