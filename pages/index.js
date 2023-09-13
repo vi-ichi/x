@@ -142,14 +142,14 @@ export default function Home() {
           onClick={onPlayButtonClick}
         >
           <Image
-            className="absolute bottom-0 mb-[350px]"
+            className="animate-ping absolute bottom-0 mb-[350px]"
             src="/heart.png"
             width={100}
             height={100}
             alt=""
           />
-          <div className="absolute bottom-0 mb-16 text-2xl text-gray-300">
-            press anywhere to play
+          <div className="animate-pulse absolute bottom-0 mb-16 text-4xl text-gray-300">
+            click to play
           </div>
         </div>
       ) : (
