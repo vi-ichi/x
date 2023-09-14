@@ -6,9 +6,6 @@ import YouTube from "react-youtube";
 import Image from "next/image";
 import Head from "next/head";
 import useInterval from "use-interval";
-import { register } from "swiper/element/bundle";
-import "swiper/element/css/pagination";
-import "swiper/element/css/navigation";
 
 function ProgressInterval({ yt, setProgress }) {
   useInterval(() => {
@@ -30,7 +27,6 @@ export default function Home() {
   const [progress, setProgress] = useState(0);
   const ref = useRef();
   const yt = useRef();
-  const swiper = useRef();
 
   function next() {
     if (i + 1 > data.length - 1) {
@@ -80,8 +76,6 @@ export default function Home() {
   useEffect(() => {
     setHeight(innerHeight);
     setWidth(innerWidth);
-
-    register();
   }, []);
 
   // const debounce = useDebouncedCallback(() => {
@@ -120,17 +114,6 @@ export default function Home() {
     img.src = "/shark.png";
   }, [width, height, afterLoad]);
 
-  useEffect(() => {
-    swiper.current?.addEventListener("progress", (e) => {
-      const [s, progress] = e.detail;
-      console.log(progress);
-    });
-
-    swiper.current?.addEventListener("slidechange", (e) => {
-      console.log("slide changed");
-    });
-  }, []);
-
   return (
     <>
       <Head>
@@ -153,7 +136,7 @@ export default function Home() {
           </div>
         </div>
       ) : (
-        <>
+        <div className="snap-y snap-mandatory h-screen overflow-y-scroll">
           <ProgressInterval yt={yt} setProgress={setProgress} />
           <YouTube
             videoId={data[i].yt}
@@ -171,8 +154,8 @@ export default function Home() {
               height: "0",
             }}
           />
-          <swiper-container ref={swiper} navigation="true" pagination="true">
-            <swiper-slide>
+          {data.map((d, i) => (
+            <div className="relative h-screen snap-always snap-start">
               <div className="absolute bottom-0 flex flex-col justify-center w-full gap-8">
                 <div className="text-center w-full mt-8">
                   <div className="text-2xl">{data[i].title}</div>
@@ -277,11 +260,11 @@ export default function Home() {
                   )}
                 </div>
               </div>
-            </swiper-slide>
-          </swiper-container>
-        </>
+            </div>
+          ))}
+        </div>
       )}
-      <canvas height={height} width={width} ref={ref}></canvas>
+      <canvas className="fixed -z-10 inset-0" height={height} width={width} ref={ref}></canvas>
     </>
   );
 }
