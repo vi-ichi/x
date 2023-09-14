@@ -155,7 +155,7 @@ export default function Home() {
             }}
           />
           {data.map((d, i) => (
-            <div className="relative h-screen snap-always snap-start">
+            <div className="relative h-screen snap-always snap-start" key={i}>
               <div className="absolute bottom-0 flex flex-col justify-center w-full gap-8">
                 <div className="text-center w-full mt-8">
                   <div className="text-2xl">{data[i].title}</div>
@@ -264,7 +264,12 @@ export default function Home() {
           ))}
         </div>
       )}
-      <canvas className="fixed -z-10 inset-0" height={height} width={width} ref={ref}></canvas>
+      <canvas
+        className="fixed -z-10 inset-0"
+        height={height}
+        width={width}
+        ref={ref}
+      ></canvas>
     </>
   );
 }
