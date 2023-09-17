@@ -30,7 +30,7 @@ const data = [
     yt: "ySLc8gZ3oEc",
   },
   {
-    title: "Четвертый уровень",
+    title: "a",
     author: "a",
     points: [
       [10, 0],

@@ -17,6 +17,12 @@ function ProgressInterval({ yt, setProgress }) {
   return null;
 }
 
+function ScrollInterval({ yt, setMusic }) {
+  useInterval(() => {}, 100);
+
+  return null;
+}
+
 export default function Home() {
   const [i, setI] = useState(0);
   // const [jump, setJump] = useState(false);
@@ -120,19 +126,21 @@ export default function Home() {
         <title>x</title>
       </Head>
       {afterLoad ? (
-        <div
-          className="flex justify-center w-full absolute inset-0"
-          onClick={onPlayButtonClick}
-        >
-          <Image
-            className="animate-ping absolute bottom-0 mb-[350px]"
-            src="/heart.png"
-            width={50}
-            height={50}
-            alt=""
-          />
-          <div className="absolute bottom-0 mb-16">
-            click anywhere to play
+        <div className="relative h-screen" onClick={onPlayButtonClick}>
+          <div className="max-w-xs mx-auto w-full absolute bottom-0">
+            <div className="text-left">x</div>
+            <div className="flex">
+              <div>
+                <Image src="/heart.png" width={50} height={50} alt="" />
+              </div>
+              <div>
+                <Image src="/heart.png" width={50} height={50} alt="" />
+              </div>
+              <div>
+                <Image src="/heart.png" width={50} height={50} alt="" />
+              </div>
+            </div>
+            <div className="text-right">click anywhere to play</div>
           </div>
         </div>
       ) : (
@@ -157,18 +165,18 @@ export default function Home() {
           {data.map((d, i) => (
             <div className="relative h-screen snap-always snap-start" key={i}>
               <div className="absolute bottom-0 flex flex-col justify-center w-full gap-8">
-                <div className="text-center w-full mt-8">
+                <div className="text-left w-full mt-8 max-w-xs mx-auto">
                   <div className="text-2xl">{d.title}</div>
-                  <div className="text-gray-400">{d.author}</div>
+                  <div className="text-gray-500">{d.author}</div>
                 </div>
                 <div className="relative max-w-xs mx-auto w-full">
                   <div
                     className="absolute bg-gray-300 h-1 z-10"
                     style={{ width: progress + "%" }}
                   ></div>
-                  <div className="absolute bg-gray-500 h-1 w-full"></div>
+                  <div className="absolute bg-gray-700 h-1 w-full"></div>
                 </div>
-                <div className="flex justify-center mb-16 gap-8">
+                <div className="mb-16 gap-8 max-w-xs mx-auto w-full">
                   {isPlay && (
                     <>
                       <button
@@ -202,7 +210,7 @@ export default function Home() {
                     </>
                   )}
                   {!isPlay && (
-                    <div className="text-center">
+                    <div className="text-right">
                       <div>click anywhere to play</div>
                       <div>or swipe down</div>
                     </div>
