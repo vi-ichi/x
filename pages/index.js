@@ -56,8 +56,9 @@ export default function Home() {
     setIsPlay(true);
   }
 
-  function pause() {
+  function stop() {
     setIsPlay(false);
+    yt.current.stopVideo();
   }
 
   function blue() {}
@@ -127,20 +128,15 @@ export default function Home() {
       </Head>
       {afterLoad ? (
         <div className="relative h-screen" onClick={onPlayButtonClick}>
-          <div className="max-w-xs mx-auto w-full absolute bottom-0">
-            <div className="text-left">x</div>
+          <div className="max-w-xs mx-auto h-screen justify-center gap-4 w-full flex-col flex items-center">
             <div className="flex">
-              <div>
-                <Image src="/heart.png" width={50} height={50} alt="" />
-              </div>
-              <div>
-                <Image src="/heart.png" width={50} height={50} alt="" />
-              </div>
-              <div>
-                <Image src="/heart.png" width={50} height={50} alt="" />
+              <div className="bg-sky-400 text-black inline-block px-3">the</div>
+              <div className="text-white px-3 animate-ping -mt-[2px]">x</div>
+              <div className="bg-pink-400 text-black inline-block px-3">
+                game
               </div>
             </div>
-            <div className="text-right">click anywhere to play</div>
+            <div>click anywhere to play</div>
           </div>
         </div>
       ) : (
@@ -163,13 +159,52 @@ export default function Home() {
             }}
           />
           {data.map((d, i) => (
-            <div className="relative h-screen snap-always snap-start" key={i}>
+            <div
+              className="relative h-screen snap-always snap-start"
+              key={i}
+              onClick={play}
+            >
+              {!isPlay && (
+                <div className="text-center pt-16 space-y-1">
+                  <div className="bg-white inline-block text-black px-3 bg-sky-300">
+                    click anywhere to play
+                  </div>
+                  <div>or</div>
+                  <div className="bg-white inline-block text-black px-3 bg-sky-300">
+                    swipe down
+                  </div>
+                </div>
+              )}
+              {isPlay && (
+                <div
+                  className="absolute flex justify-center h-[175px] items-center w-full z-10"
+                  onClick={stop}
+                >
+                  click here to stop
+                </div>
+              )}
+              {isPlay && (
+                <div className="absolute h-screen flex items-center justify-center w-full">
+                  <div className="border border-dashed w-full max-w-xs h-[calc(100vh-350px)] divide-x divide-dashed flex">
+                    <div className="w-1/2 text-right pr-2 text-sky-400">
+                      xxxxxxxxxxxxxxxxxx
+                    </div>
+                    <div>
+                      <div className="pl-2 text-pink-400">
+                        xxxxxxxxxxxxxxxxxx
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
               <div className="absolute bottom-0 flex flex-col justify-center w-full gap-8">
                 <div className="text-left w-full mt-8 max-w-xs mx-auto">
-                  <div className="text-2xl">{d.title}</div>
-                  <div className="text-gray-500">{d.author}</div>
+                  <div className="text-center text-lime-400">{d.author}</div>
                 </div>
                 <div className="relative max-w-xs mx-auto w-full">
+                  <div className="text-2xl text-black bg-pink-400 -mt-4 z-20 left-1/2 -translate-x-1/2 inline-block px-3 absolute">
+                    {d.title}
+                  </div>
                   <div
                     className="absolute bg-gray-300 h-1 z-10"
                     style={{ width: progress + "%" }}
@@ -177,44 +212,11 @@ export default function Home() {
                   <div className="absolute bg-gray-700 h-1 w-full"></div>
                 </div>
                 <div className="mb-16 gap-8 max-w-xs mx-auto w-full">
-                  {isPlay && (
-                    <>
-                      <button
-                        className="rounded-full bg-sky-400 p-4"
-                        onClick={blue}
-                      >
-                        <div className="w-6 h-6"></div>
-                      </button>
-                      <button className="rounded-full p-4" onClick={pause}>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth="1.5"
-                          stroke="white"
-                          className="w-6 h-6"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M15.75 5.25v13.5m-7.5-13.5v13.5"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        className="rounded-full bg-pink-400 p-4"
-                        onClick={red}
-                      >
-                        <div className="w-6 h-6"></div>
-                      </button>
-                    </>
-                  )}
-                  {!isPlay && (
-                    <div className="text-right">
-                      <div>click anywhere to play</div>
-                      <div>or swipe down</div>
-                    </div>
-                  )}
+                  <div className="absolute max-w-xs w-full flex justify-between">
+                    <div className="text-sky-400">click sky</div>
+                    <div>or</div>
+                    <div className="text-pink-400">click pink</div>
+                  </div>
                 </div>
               </div>
             </div>
