@@ -4,10 +4,4 @@
 
 :root {
   color-scheme: dark;
-  cursor: none;
-  scrollbar-width: none;
-}
-
-::-webkit-scrollbar {
-  display: none;
 }

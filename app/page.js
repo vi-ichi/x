@@ -1,11 +1,10 @@
+"use client";
+
 import { useEffect, useState, useRef } from "react";
-import keyboardjs from "keyboardjs";
-import { useDebouncedCallback } from "use-debounce";
 import data from "@/data";
 import YouTube from "react-youtube";
-import Image from "next/image";
-import Head from "next/head";
 import useInterval from "use-interval";
+import { Joystick } from "react-joystick-component";
 
 function ProgressInterval({ yt, setProgress }) {
   useInterval(() => {
@@ -17,15 +16,8 @@ function ProgressInterval({ yt, setProgress }) {
   return null;
 }
 
-function ScrollInterval({ yt, setMusic }) {
-  useInterval(() => {}, 100);
-
-  return null;
-}
-
 export default function Home() {
   const [i, setI] = useState(0);
-  // const [jump, setJump] = useState(false);
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
   const [isPlay, setIsPlay] = useState(false);
@@ -61,10 +53,6 @@ export default function Home() {
     yt.current.stopVideo();
   }
 
-  function blue() {}
-
-  function red() {}
-
   function onReady({ target }) {
     target.playVideo();
     yt.current = target;
@@ -84,21 +72,6 @@ export default function Home() {
     setHeight(innerHeight);
     setWidth(innerWidth);
   }, []);
-
-  // const debounce = useDebouncedCallback(() => {
-  //   setJump(false);
-  // }, 100);
-
-  // useEffect(() => {
-  //   keyboardjs.bind("space", () => {
-  //     if (!level) {
-  //       return;
-  //     }
-
-  //     setJump(true);
-  //     debounce();
-  //   });
-  // }, [level, debounce]);
 
   useEffect(() => {
     if (!ref.current || !width || !height) {
@@ -123,11 +96,11 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <title>x</title>
-      </Head>
       {afterLoad ? (
-        <div className="relative h-screen" onClick={onPlayButtonClick}>
+        <div
+          className="relative h-screen cursor-pointer"
+          onClick={onPlayButtonClick}
+        >
           <div className="max-w-xs mx-auto h-screen justify-center gap-4 w-full flex-col flex items-center">
             <div className="flex">
               <div className="bg-sky-400 text-black inline-block px-3">the</div>
@@ -176,12 +149,17 @@ export default function Home() {
                 </div>
               )}
               {isPlay && (
-                <div
-                  className="absolute flex justify-center h-[175px] items-center w-full z-10"
-                  onClick={stop}
-                >
-                  click here to stop
-                </div>
+                <>
+                  <div
+                    className="absolute flex justify-center h-[175px] items-center w-full z-10"
+                    onClick={stop}
+                  >
+                    click here to stop
+                  </div>
+                  <div className="flex justify-center absolute z-30 w-full bottom-[100px]">
+                    <Joystick baseColor="white" stickColor="black" size={70} />
+                  </div>
+                </>
               )}
               {isPlay && (
                 <div className="absolute h-screen flex items-center justify-center w-full">
